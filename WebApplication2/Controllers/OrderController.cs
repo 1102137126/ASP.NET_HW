@@ -9,6 +9,7 @@ namespace WebApplication2.Controllers
     public class OrderController : Controller
     {
         Models.CodeService codeService = new Models.CodeService();
+        Models.OrderService orderService = new Models.OrderService();
         /// <summary>
         /// 訂單管理首頁
         /// </summary>
@@ -58,6 +59,12 @@ namespace WebApplication2.Controllers
         {
             var result = new Models.Order() { CustId = "1102137103", CustName = "阿涵" };
             return this.Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Update(string orderId)
+        {
+            ViewBag.OrderData = this.orderService.GetOrderById(orderId);
+            return View();
         }
     }
 }

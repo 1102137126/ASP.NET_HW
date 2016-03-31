@@ -276,6 +276,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\_LayoutPage1.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Order\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
