@@ -277,6 +277,8 @@
     <Content Include="Views\_LayoutPage1.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Order\Update.cshtml" />
+    <Content Include="Views\Order\Index2.cshtml" />
+    <Content Include="Views\Order\InsertOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

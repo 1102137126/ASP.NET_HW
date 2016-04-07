@@ -40,6 +40,9 @@ namespace WebApplication2.Controllers
         /// <returns></returns>
         public ActionResult InsertOrder()
         {
+            ViewBag.EmpCodeData = this.codeService.GetEmp();
+            ViewBag.ShipCodeData = this.codeService.GetShipper();
+            ViewBag.CustCodeData = this.codeService.GetCustomer();
             return View();
         }
         /// <summary>
@@ -50,8 +53,33 @@ namespace WebApplication2.Controllers
         [HttpPost()]
         public ActionResult InsertOrder(Models.Order order)
         {
+            ViewBag.EmpCodeData = this.codeService.GetEmp();
+            ViewBag.ShipCodeData = this.codeService.GetShipper();
             Models.OrderService orderService = new Models.OrderService();
             orderService.InsertOrder(order);
+            return View("Index");
+        }
+        /// <summary>
+        /// 依訂單ID取得訂單資料的畫面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet()]
+        public ActionResult Update(string id)
+        {
+            ViewBag.OrderData = this.orderService.GetOrderById(id);
+            return View();
+        }
+        /// <summary>
+        /// 修改訂單存檔的Action
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost()]
+        public ActionResult Update(Models.Order order)
+        {
+            Models.OrderService orderService = new Models.OrderService();
+            orderService.UpdateOrder(order);
             return View("Index");
         }
         [HttpGet()]
@@ -60,10 +88,8 @@ namespace WebApplication2.Controllers
             var result = new Models.Order() { CustId = "1102137103", CustName = "阿涵" };
             return this.Json(result, JsonRequestBehavior.AllowGet);
         }
-
-        public ActionResult Update(string orderId)
+        public ActionResult Index2(string id)
         {
-            ViewBag.OrderData = this.orderService.GetOrderById(orderId);
             return View();
         }
     }

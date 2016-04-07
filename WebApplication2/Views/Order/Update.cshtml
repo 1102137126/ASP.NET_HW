@@ -5,12 +5,11 @@
     Layout = "~/Views/_LayoutPage1.cshtml";
 }
 
-<h2>Update</h2>
-
-@using (Html.BeginForm()) 
+<h2>修改訂單</h2>
+@using (Html.BeginForm("Index", "Order", FormMethod.Post, new { id = "Form1" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Order</h4>
         <hr />
@@ -18,7 +17,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CustId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CustId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.CustId, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.CustId } })
                 @Html.ValidationMessageFor(model => model.CustId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -26,7 +25,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.CustName } })
                 @Html.ValidationMessageFor(model => model.CustName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -34,7 +33,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EmpId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EmpId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.EmpId, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.EmpId } })
                 @Html.ValidationMessageFor(model => model.EmpId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -42,7 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EmpName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.EmpName, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.EmpName } })
                 @Html.ValidationMessageFor(model => model.EmpName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -50,7 +49,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.OrderDate } })
                 @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -58,7 +57,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RequireDdate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RequireDdate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.RequireDdate, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.RequireDdate } })
                 @Html.ValidationMessageFor(model => model.RequireDdate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -66,7 +65,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShippedDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ShippedDate, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.ShippedDate } })
                 @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -74,7 +73,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShipperId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipperId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ShipperId, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.ShipperId } })
                 @Html.ValidationMessageFor(model => model.ShipperId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -82,7 +81,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipperName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ShipperName, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.ShipperName } })
                 @Html.ValidationMessageFor(model => model.ShipperName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -90,7 +89,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Freight, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Freight, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Freight, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.Freight } })
                 @Html.ValidationMessageFor(model => model.Freight, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -98,7 +97,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShipName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ShipName, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.ShipName } })
                 @Html.ValidationMessageFor(model => model.ShipName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -106,7 +105,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShipAddress, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ShipAddress, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.ShipAddress } })
                 @Html.ValidationMessageFor(model => model.ShipAddress, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -114,7 +113,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShipCity, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipCity, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ShipCity, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.ShipCity } })
                 @Html.ValidationMessageFor(model => model.ShipCity, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -122,7 +121,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShipRegion, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipRegion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ShipRegion, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.ShipRegion } })
                 @Html.ValidationMessageFor(model => model.ShipRegion, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -130,7 +129,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShipPostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipPostalCode, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ShipPostalCode, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.ShipPostalCode } })
                 @Html.ValidationMessageFor(model => model.ShipPostalCode, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -138,14 +137,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShipCountry, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipCountry, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ShipCountry, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.ShipCountry } })
                 @Html.ValidationMessageFor(model => model.ShipCountry, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Update" class="btn btn-default" />
             </div>
         </div>
     </div>

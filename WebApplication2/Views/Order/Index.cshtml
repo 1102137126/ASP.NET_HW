@@ -24,13 +24,13 @@
             <tr>
                 <td>負責員工</td>
                 <td>
-                    @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)
+                    @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData, "請選擇")
                 </td>
             </tr>
             <tr>
                 <td>出貨公司</td>
                 <td>
-                    @Html.DropDownListFor(model => model.ShipperId, (List<SelectListItem>)ViewBag.ShipCodeData)
+                    @Html.DropDownListFor(model => model.ShipperId, (List<SelectListItem>)ViewBag.ShipCodeData,"請選擇")
                 </td>
             </tr>
             <tr>
@@ -53,7 +53,7 @@
                 <td></td>
                 <td>
                     <input type="submit" value="查詢" />
-                    <input type="button" value="清除" />
+                    <input type="reset" value="清除" />
                     @Html.ActionLink("新增訂單", "InsertOrder")
                 </td>
 

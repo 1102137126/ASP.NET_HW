@@ -25,6 +25,35 @@ namespace WebApplication2.Models
         /// </summary>
         public void InsertOrder(Models.Order order)
         {
+            DataTable dt = new DataTable();
+            string sql = @"INSERT INTO Sales.Orders(OrderID, CustomerID, EmployeeID, OrderDate, RequiredDate, ShippedDate, ShipperID, 
+                                                    Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry) 
+                            VALUES (@OrderID, @CustomerID, @EmployeeID, @OrderDate, @RequiredDate, @ShippedDate, @ShipperID, 
+                                    @Freight, @ShipName, @ShipAddress, @ShipCity, @ShipRegion, @ShipPostalCode, @ShipCountry)";
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@OrderId", order.OrderId));
+                cmd.Parameters.Add(new SqlParameter("@CustomerID", order.CustId));
+                cmd.Parameters.Add(new SqlParameter("@EmployeeID", order.EmpId));
+                cmd.Parameters.Add(new SqlParameter("@OrderDate", order.OrderDate));
+                cmd.Parameters.Add(new SqlParameter("@RequiredDate", order.RequireDdate));
+                cmd.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate));
+                cmd.Parameters.Add(new SqlParameter("@ShipperID", order.ShipperId));
+                cmd.Parameters.Add(new SqlParameter("@Freight", order.Freight));
+                cmd.Parameters.Add(new SqlParameter("@ShipName", order.ShipName));
+                cmd.Parameters.Add(new SqlParameter("@ShipAddress", order.ShipAddress));
+                cmd.Parameters.Add(new SqlParameter("@ShipCity", order.ShipCity));
+                cmd.Parameters.Add(new SqlParameter("@ShipRegion", order.ShipRegion));
+                cmd.Parameters.Add(new SqlParameter("@ShipPostalCode", order.ShipPostalCode));
+                cmd.Parameters.Add(new SqlParameter("@ShipCountry", order.ShipCountry));
+
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
+            //return this.MapOrderDataToList(dt).FirstOrDefault();
         }
         /// <summary>
         /// 刪除訂單 By Id
@@ -35,11 +64,11 @@ namespace WebApplication2.Models
         /// <summary>
         /// 修改訂單
         /// </summary>
-        public void UpdateOrder()
+        public void UpdateOrder(Models.Order order)
         {
         }
         /// <summary>
-        /// 取得訂單
+        /// 依照訂單ID取得訂單資料
         /// </summary>
         /// <param name="id">訂單ID</param>
         /// <returns></returns>
@@ -47,16 +76,16 @@ namespace WebApplication2.Models
         {
             DataTable dt = new DataTable();
             string sql = @"SELECT 
-	                        O.OrderID, O.CustomerID, C.CompanyName, 
-	                        O.EmployeeID, E.LastName + E.FirstName AS EmpName, 
-	                        O.OrderDate, O.RequiredDate, O.ShippedDate, 
-	                        O.ShipperID, S.CompanyName, O.Freight, 
-	                        O.ShipName, O.ShipAddress, O.ShipCity, O.ShipRegion, O.ShipPostalCode, O.ShipCountry
-                        FROM Sales.Orders AS O 
-	                        INNER JOIN Sales.Customers AS C ON O.CustomerID = C.CustomerID
-	                        INNER JOIN HR.Employees AS E ON O.EmployeeID = E.EmployeeID
-	                        INNER JOIN Sales.Shippers AS S ON O.ShipperID = S.ShipperID
-                        WHERE O.OrderID = @OrderId";
+	                O.OrderId,O.CustomerID,C.Companyname As CustName,
+	                O.EmployeeID,E.lastname+ E.firstname As EmpName,
+	                O.OrderDate,O.RequireDdate,O.ShippedDate,
+	                O.ShipperID,S.companyname As ShipperName,O.Freight,
+	                O.ShipName,O.ShipAddress,O.ShipCity,O.ShipRegion,O.ShipPostalCode,O.ShipCountry
+                    FROM Sales.Orders AS O 
+	                    INNER JOIN Sales.Customers AS C ON O.CustomerID = C.CustomerID
+	                    INNER JOIN HR.Employees AS E ON O.EmployeeID = E.EmployeeID
+	                    INNER JOIN Sales.Shippers AS S ON O.ShipperID = S.ShipperID
+                    WHERE O.OrderID = @OrderId";
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
             {
                 conn.Open();
@@ -70,6 +99,48 @@ namespace WebApplication2.Models
             return this.MapOrderDataToList(dt).FirstOrDefault();
         }
         /// <summary>
+		/// 依照條件取得訂單資料
+		/// </summary>
+		/// <returns></returns>
+		public List<Models.Order> GetOrderByCondtioin(Models.OrderSearchArg arg)
+        {
+            DataTable dt = new DataTable();
+            string sql = @"SELECT 
+					O.OrderId,O.CustomerID,C.Companyname As CustName,
+	                O.EmployeeID,E.lastname+ E.firstname As EmpName,
+	                O.OrderDate,O.RequireDdate,O.ShippedDate,
+	                O.ShipperID,S.companyname As ShipperName,O.Freight,
+	                O.ShipName,O.ShipAddress,O.ShipCity,O.ShipRegion,O.ShipPostalCode,O.ShipCountry
+                    FROM Sales.Orders As O 
+	                    INNER JOIN Sales.Customers As C ON O.CustomerID=C.CustomerID
+	                    INNER JOIN HR.Employees As E On O.EmployeeID=E.EmployeeID
+	                    INNER JOIN Sales.Shippers As S ON O.ShipperID=S.ShipperID
+					WHERE (C.Companyname Like @CustName Or @CustName='') And 
+						  (O.OrderDate=@OrderDate Or @OrderDate='')  And 
+						  (O.EmployeeID=@EmpId Or @EmpId='') And 
+						  (O.OrderId=@OrderId Or @OrderId='') And 
+						  (O.ShipperID=@ShipperId Or @ShipperId='') And 
+						  (O.ShippedDate=@ShippedDate Or @ShippedDate='') And 
+						  (O.RequireDdate=@RequireDdate Or @RequireDdate='')";
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@CustName", arg.CustName == null ? string.Empty : arg.CustName));
+                cmd.Parameters.Add(new SqlParameter("@OrderDate", arg.OrderDate == null ? string.Empty : arg.OrderDate));
+                cmd.Parameters.Add(new SqlParameter("@EmpId", arg.EmpId == null ? string.Empty : arg.EmpId));
+                cmd.Parameters.Add(new SqlParameter("@OrderId", arg.OrderId == null ? string.Empty : arg.OrderId));
+                cmd.Parameters.Add(new SqlParameter("@ShipperId", arg.ShipperId == null ? string.Empty : arg.ShipperId));
+                cmd.Parameters.Add(new SqlParameter("@ShippedDate", arg.ShippedDate == null ? string.Empty : arg.ShippedDate));
+                cmd.Parameters.Add(new SqlParameter("@RequireDdate", arg.RequireDdate == null ? string.Empty : arg.RequireDdate));
+
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
+            return this.MapOrderDataToList(dt);
+        }
+        /// <summary>
         /// 取得訂單
         /// </summary>
         /// <returns></returns>
@@ -81,7 +152,6 @@ namespace WebApplication2.Models
         private List<Models.Order> MapOrderDataToList(DataTable orderData)
         {
             List<Models.Order> result = new List<Order>();
-
 
             foreach (DataRow row in orderData.Rows)
             {
@@ -107,51 +177,6 @@ namespace WebApplication2.Models
                 });
             }
             return result;
-        }
-        /// <summary>
-		/// 依照條件取得訂單資料
-		/// </summary>
-		/// <returns></returns>
-		public List<Models.Order> GetOrderByCondtioin(Models.OrderSearchArg arg)
-        {
-
-            DataTable dt = new DataTable();
-            string sql = @"SELECT 
-					O.OrderId,O.CustomerID,C.Companyname As CustName,
-	                O.EmployeeID,E.lastname+ E.firstname As EmpName,
-	                O.OrderDate,O.RequireDdate,O.ShippedDate,
-	                O.ShipperID,S.companyname As ShipperName,O.Freight,
-	                O.ShipName,O.ShipAddress,O.ShipCity,O.ShipRegion,O.ShipPostalCode,O.ShipCountry
-                    From Sales.Orders As O 
-	                INNER JOIN Sales.Customers As C ON O.CustomerID=C.CustomerID
-	                INNER JOIN HR.Employees As E On O.EmployeeID=E.EmployeeID
-	                inner JOIN Sales.Shippers As S ON O.ShipperID=S.ShipperID
-					Where (C.Companyname Like @CustName Or @CustName='') And 
-						  (O.OrderDate=@OrderDate Or @OrderDate='')  And 
-						  (O.EmployeeID=@EmpId Or @EmpId='') And 
-						  (O.OrderId=@OrderId Or @OrderId='') And 
-						  (O.ShipperID=@ShipperId Or @ShipperId='') And 
-						  (O.ShippedDate=@ShippedDate Or @ShippedDate='') And 
-						  (O.RequireDdate=@RequireDdate Or @RequireDdate='')";
-
-            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.Add(new SqlParameter("@CustName", arg.CustName == null ? string.Empty : arg.CustName));
-                cmd.Parameters.Add(new SqlParameter("@OrderDate", arg.OrderDate == null ? string.Empty : arg.OrderDate));
-                cmd.Parameters.Add(new SqlParameter("@EmpId", arg.EmpId == null ? string.Empty : arg.EmpId));
-                cmd.Parameters.Add(new SqlParameter("@OrderId", arg.OrderId == null ? string.Empty : arg.OrderId));
-                cmd.Parameters.Add(new SqlParameter("@ShipperId", arg.ShipperId == null ? string.Empty : arg.ShipperId));
-                cmd.Parameters.Add(new SqlParameter("@ShippedDate", arg.ShippedDate == null ? string.Empty : arg.ShippedDate));
-                cmd.Parameters.Add(new SqlParameter("@RequireDdate", arg.RequireDdate == null ? string.Empty : arg.RequireDdate));
-                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
-                sqlAdapter.Fill(dt);
-                conn.Close();
-            }
-
-
-            return this.MapOrderDataToList(dt);
         }
     }
 }
