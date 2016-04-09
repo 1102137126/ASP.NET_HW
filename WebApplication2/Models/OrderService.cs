@@ -23,37 +23,40 @@ namespace WebApplication2.Models
         /// <summary>
         /// 新增訂單
         /// </summary>
-        public void InsertOrder(Models.Order order)
+        public int InsertOrder(Models.Order order)
         {
-            DataTable dt = new DataTable();
-            string sql = @"INSERT INTO Sales.Orders(OrderID, CustomerID, EmployeeID, OrderDate, RequiredDate, ShippedDate, ShipperID, 
-                                                    Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry) 
-                            VALUES (@OrderID, @CustomerID, @EmployeeID, @OrderDate, @RequiredDate, @ShippedDate, @ShipperID, 
-                                    @Freight, @ShipName, @ShipAddress, @ShipCity, @ShipRegion, @ShipPostalCode, @ShipCountry)";
+            string sql = @"Insert INTO Sales.Orders(
+	                        CustomerID,EmployeeID,orderdate,requireddate,shippeddate,shipperid,freight,
+	                        shipname,shipaddress,shipcity,shipregion,shippostalcode,shipcountry
+                        )VALUES(
+							@custid,@empid,@orderdate,@requireddate,@shippeddate,@shipperid,@freight,
+							@shipname,@shipaddress,@shipcity,@shipregion,@shippostalcode,@shipcountry
+						)
+						Select SCOPE_IDENTITY()
+						";
+            int orderId;
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.Add(new SqlParameter("@OrderId", order.OrderId));
-                cmd.Parameters.Add(new SqlParameter("@CustomerID", order.CustId));
-                cmd.Parameters.Add(new SqlParameter("@EmployeeID", order.EmpId));
-                cmd.Parameters.Add(new SqlParameter("@OrderDate", order.OrderDate));
-                cmd.Parameters.Add(new SqlParameter("@RequiredDate", order.RequireDdate));
-                cmd.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate));
-                cmd.Parameters.Add(new SqlParameter("@ShipperID", order.ShipperId));
-                cmd.Parameters.Add(new SqlParameter("@Freight", order.Freight));
-                cmd.Parameters.Add(new SqlParameter("@ShipName", order.ShipName));
-                cmd.Parameters.Add(new SqlParameter("@ShipAddress", order.ShipAddress));
-                cmd.Parameters.Add(new SqlParameter("@ShipCity", order.ShipCity));
-                cmd.Parameters.Add(new SqlParameter("@ShipRegion", order.ShipRegion));
-                cmd.Parameters.Add(new SqlParameter("@ShipPostalCode", order.ShipPostalCode));
-                cmd.Parameters.Add(new SqlParameter("@ShipCountry", order.ShipCountry));
+                cmd.Parameters.Add(new SqlParameter("@custid", order.CustId));
+                cmd.Parameters.Add(new SqlParameter("@empid", order.EmpId));
+                cmd.Parameters.Add(new SqlParameter("@orderdate", order.OrderDate));
+                cmd.Parameters.Add(new SqlParameter("@requireddate", order.RequireDdate));
+                cmd.Parameters.Add(new SqlParameter("@shippeddate", order.ShippeDdate));
+                cmd.Parameters.Add(new SqlParameter("@shipperid", order.ShipperId));
+                cmd.Parameters.Add(new SqlParameter("@freight", order.Freight));
+                cmd.Parameters.Add(new SqlParameter("@shipname", order.ShipName));
+                cmd.Parameters.Add(new SqlParameter("@shipaddress", order.ShipAddress));
+                cmd.Parameters.Add(new SqlParameter("@shipcity", order.ShipCity));
+                cmd.Parameters.Add(new SqlParameter("@shipregion", order.ShipRegion));
+                cmd.Parameters.Add(new SqlParameter("@shippostalcode", order.ShipPostalCode));
+                cmd.Parameters.Add(new SqlParameter("@shipcountry", order.ShipCountry));
 
-                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
-                sqlAdapter.Fill(dt);
+                orderId = (int)cmd.ExecuteScalar();
                 conn.Close();
             }
-            //return this.MapOrderDataToList(dt).FirstOrDefault();
+            return orderId;
         }
         /// <summary>
         /// 刪除訂單 By Id
