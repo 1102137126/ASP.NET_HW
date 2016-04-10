@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/_LayoutPage1.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h2>訂單查詢</h2>
 @using (Html.BeginForm("Index", "Order", FormMethod.Post, new { id = "Form1" }))
@@ -11,25 +11,25 @@
         <table class="table table-bordered">
             <tr>
                 <td>訂單編號</td>
-                <td>
+                <td colspan="3">
                     @Html.TextBoxFor(model => model.OrderId)
                 </td>
             </tr>
             <tr>
                 <td>客戶名稱</td>
-                <td>
+                <td colspan="3">
                     @Html.TextBoxFor(model => model.CustName)
                 </td>
             </tr>
             <tr>
                 <td>負責員工</td>
-                <td>
+                <td colspan="3">
                     @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData, "請選擇")
                 </td>
             </tr>
             <tr>
                 <td>出貨公司</td>
-                <td>
+                <td colspan="3">
                     @Html.DropDownListFor(model => model.ShipperId, (List<SelectListItem>)ViewBag.ShipCodeData,"請選擇")
                 </td>
             </tr>
@@ -45,13 +45,13 @@
             </tr>
             <tr>
                 <td>需要日期</td>
-                <td>
+                <td colspan="3">
                     @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date" })
                 </td>
             </tr>
             <tr>
                 <td></td>
-                <td>
+                <td colspan="3">
                     <input type="submit" value="查詢" />
                     <input type="reset" value="清除" />
                     @Html.ActionLink("新增訂單", "InsertOrder")
@@ -62,7 +62,6 @@
     </div>
 
     <div id="SearchResultSection">
-
 
         @if (ViewBag.SearchResult != null)
         {
@@ -84,23 +83,20 @@
                         <td>@item.ShippedDate</td>
                         <td>@Html.ActionLink("修改", "Update", new { id = item.OrderId })</td>
                         <td>
-                            <a class="btnDelete" href="Delete">刪除</a>
+                            <a class="btnDelete" href="#">刪除</a>
                             <input class="hidOrderId" type="hidden" value='@item.OrderId' />
                         </td>
                     </tr>
                 }
-
             </table>
         }
-
-
     </div>
 }
 
 <script type="text/javascript">
 
     $(".btnDelete").click(function (e) {
-
+        console.log("delete");
         var tr = $(this).closest('tr')
         $.ajax({
             type: "POST",

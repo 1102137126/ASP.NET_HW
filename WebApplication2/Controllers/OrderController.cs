@@ -43,7 +43,8 @@ namespace WebApplication2.Controllers
             ViewBag.EmpCodeData = this.codeService.GetEmp();
             ViewBag.ShipCodeData = this.codeService.GetShipper();
             ViewBag.CustCodeData = this.codeService.GetCustomer();
-            return View();
+            ViewBag.ProductCodeData = this.codeService.GetProduct();
+            return View(new Models.Order());
         }
         /// <summary>
         /// 新增訂單存檔的Action
@@ -53,12 +54,21 @@ namespace WebApplication2.Controllers
         [HttpPost()]
         public ActionResult InsertOrder(Models.Order order)
         {
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(order);
+            //return View();
+        }
+        /*public ActionResult InsertOrder(Models.Order order)
+        {
             ViewBag.EmpCodeData = this.codeService.GetEmp();
             ViewBag.ShipCodeData = this.codeService.GetShipper();
             Models.OrderService orderService = new Models.OrderService();
             orderService.InsertOrder(order);
             return View("Index");
-        }
+        }*/
         /// <summary>
         /// 依訂單ID取得訂單資料的畫面
         /// </summary>
@@ -82,6 +92,36 @@ namespace WebApplication2.Controllers
             orderService.UpdateOrder(order);
             return View("Index");
         }
+        /// <summary>
+        /// 依訂單ID刪除訂單
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult DeleteOrder(string orderId)
+        {
+            try
+            {
+                Models.OrderService orderService = new Models.OrderService();
+                orderService.DeleteOrderById(orderId);
+                return this.Json(true);
+            }
+            catch (Exception)
+            {
+
+                return this.Json(false);
+            }
+        }
+        /// <summary>
+        /// 取得系統時間
+        /// </summary>
+        /// <returns></returns>
+        /*public ActionResult GetSysDate()
+        {
+            return PartialView("_SysDatePartial");
+        }*/
+
+        
         [HttpGet()]
         public JsonResult TestJson()
         {

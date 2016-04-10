@@ -43,7 +43,7 @@ namespace WebApplication2.Models
                 cmd.Parameters.Add(new SqlParameter("@empid", order.EmpId));
                 cmd.Parameters.Add(new SqlParameter("@orderdate", order.OrderDate));
                 cmd.Parameters.Add(new SqlParameter("@requireddate", order.RequireDdate));
-                cmd.Parameters.Add(new SqlParameter("@shippeddate", order.ShippeDdate));
+                cmd.Parameters.Add(new SqlParameter("@shippeddate", order.ShippedDate));
                 cmd.Parameters.Add(new SqlParameter("@shipperid", order.ShipperId));
                 cmd.Parameters.Add(new SqlParameter("@freight", order.Freight));
                 cmd.Parameters.Add(new SqlParameter("@shipname", order.ShipName));
@@ -59,10 +59,26 @@ namespace WebApplication2.Models
             return orderId;
         }
         /// <summary>
-        /// 刪除訂單 By Id
+        /// 刪除訂單 By orderId
         /// </summary>
-        public void DeleteOrderById(String id)
+        public void DeleteOrderById(String orderId)
         {
+            try
+            {
+                string sql = "Delete FROM Sales.Orders Where orderid=@orderid";
+                using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.Add(new SqlParameter("@orderid", orderId));
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         /// <summary>
         /// 修改訂單
