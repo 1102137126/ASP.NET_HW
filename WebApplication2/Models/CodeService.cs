@@ -12,6 +12,7 @@ namespace WebApplication2.Models
 {
     public class CodeService
     {
+        private int prid = -1;   
         /// <summary>
         /// 取得DB連線字串
         /// </summary>
@@ -45,8 +46,9 @@ namespace WebApplication2.Models
         /// 取得員工資料
         /// </summary>
         /// <returns></returns>
-        public List<SelectListItem> GetEmp()
+        public List<SelectListItem> GetEmp(int id)
         {
+            prid = id;
             DataTable dt = new DataTable();
             string sql = @"Select EmployeeID As CodeId,Lastname+'-'+Firstname As CodeName FROM HR.Employees";
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
@@ -64,8 +66,9 @@ namespace WebApplication2.Models
         /// 取得客戶資料
         /// </summary>
         /// <returns></returns>
-        public List<SelectListItem> GetCustomer()
+        public List<SelectListItem> GetCustomer(int id)
         {
+            prid = id;
             DataTable dt = new DataTable();
             string sql = @"Select CustomerID As CodeId,CompanyName As CodeName FROM Sales.Customers";
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
@@ -83,8 +86,9 @@ namespace WebApplication2.Models
         /// 取得公司資料
         /// </summary>
         /// <returns></returns>
-        public List<SelectListItem> GetShipper()
+        public List<SelectListItem> GetShipper(int id)
         {
+            prid = id;
             DataTable dt = new DataTable();
             string sql = @"Select ShipperID As CodeId,CompanyName As CodeName FROM Sales.Shippers";
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
@@ -107,13 +111,13 @@ namespace WebApplication2.Models
         {
             List<SelectListItem> result = new List<SelectListItem>();
 
-
             foreach (DataRow row in dt.Rows)
             {
                 result.Add(new SelectListItem()
                 {
                     Text = row["CodeName"].ToString(),
-                    Value = row["CodeId"].ToString()
+                    Value = row["CodeId"].ToString(),
+                    Selected = row["CodeId"].Equals(prid)
                 });
             }
             return result;

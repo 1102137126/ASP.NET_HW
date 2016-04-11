@@ -53,7 +53,7 @@ namespace WebApplication2.Models
                 cmd.Parameters.Add(new SqlParameter("@shippostalcode", order.ShipPostalCode));
                 cmd.Parameters.Add(new SqlParameter("@shipcountry", order.ShipCountry));
 
-                orderId = (int)cmd.ExecuteScalar();
+                orderId = Convert.ToInt32(cmd.ExecuteScalar());
                 conn.Close();
             }
             return orderId;

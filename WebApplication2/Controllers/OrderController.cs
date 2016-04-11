@@ -16,8 +16,8 @@ namespace WebApplication2.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            ViewBag.EmpCodeData = this.codeService.GetEmp();
-            ViewBag.ShipCodeData = this.codeService.GetShipper();
+            ViewBag.EmpCodeData = this.codeService.GetEmp(-1);
+            ViewBag.ShipCodeData = this.codeService.GetShipper(-1);
             return View();
         }
         /// <summary>
@@ -28,8 +28,8 @@ namespace WebApplication2.Controllers
         [HttpPost()]
         public ActionResult Index(Models.OrderSearchArg arg)
         {
-            ViewBag.EmpCodeData = this.codeService.GetEmp();
-            ViewBag.ShipCodeData = this.codeService.GetShipper();
+            ViewBag.EmpCodeData = this.codeService.GetEmp(-1);
+            ViewBag.ShipCodeData = this.codeService.GetShipper(-1);
             Models.OrderService orderService = new Models.OrderService();
             ViewBag.SearchResult = orderService.GetOrderByCondtioin(arg);
             return View("Index");
@@ -40,9 +40,9 @@ namespace WebApplication2.Controllers
         /// <returns></returns>
         public ActionResult InsertOrder()
         {
-            ViewBag.EmpCodeData = this.codeService.GetEmp();
-            ViewBag.ShipCodeData = this.codeService.GetShipper();
-            ViewBag.CustCodeData = this.codeService.GetCustomer();
+            ViewBag.EmpCodeData = this.codeService.GetEmp(-1);
+            ViewBag.ShipCodeData = this.codeService.GetShipper(-1);
+            ViewBag.CustCodeData = this.codeService.GetCustomer(-1);
             ViewBag.ProductCodeData = this.codeService.GetProduct();
             return View(new Models.Order());
         }
@@ -56,6 +56,8 @@ namespace WebApplication2.Controllers
         {
             if (ModelState.IsValid)
             {
+                Models.OrderService orderService = new Models.OrderService();
+                int a = orderService.InsertOrder(order);
                 return RedirectToAction("Index");
             }
             return View(order);
@@ -77,7 +79,11 @@ namespace WebApplication2.Controllers
         [HttpGet()]
         public ActionResult Update(string id)
         {
-            ViewBag.OrderData = this.orderService.GetOrderById(id);
+            Models.Order order = this.orderService.GetOrderById(id);
+            ViewBag.EmpCodeData = this.codeService.GetEmp(Convert.ToInt32(order.EmpId));
+            ViewBag.ShipCodeData = this.codeService.GetShipper(Convert.ToInt32(order.ShipperId));
+            ViewBag.CustCodeData = this.codeService.GetCustomer(Convert.ToInt32(order.CustId));
+            ViewBag.OrderData = order;
             return View();
         }
         /// <summary>
