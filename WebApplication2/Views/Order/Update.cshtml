@@ -6,15 +6,24 @@
 }
 
 <h2>修改訂單</h2>
-@using (Html.BeginForm("Index", "Order", FormMethod.Post, new { id = "Form1" }))
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
 
     <div class="form-horizontal">
-        <h4>Order</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <table class="table table-bordered">
+            <tr>
+                <td>@Html.LabelFor(model => model.OrderId)</td>
+                <td colspan="3">
+                    @Html.EditorFor(model => model.OrderId, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.OrderId , @readonly = true, @type = "text"} })
+                    @Html.ValidationMessageFor(model => model.OrderId)
+                </td>
+            </tr>
+
             <tr>
                 <td>
                     @Html.LabelFor(model => model.CustId)
@@ -36,12 +45,12 @@
             <tr>
                 <td>@Html.LabelFor(model => model.OrderDate)</td>
                 <td>
-                    @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
+                    @Html.TextBoxFor(model => model.OrderDate, new { @type = "date", @Value = ViewBag.OrderDate })
                     @Html.ValidationMessageFor(model => model.OrderDate)
                 </td>
                 <td>@Html.LabelFor(model => model.RequireDdate)</td>
                 <td>
-                    @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date" })
+                    @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date", @Value = ViewBag.RequireDdate })
                     @Html.ValidationMessageFor(model => model.RequireDdate)
                 </td>
             </tr>
@@ -49,7 +58,7 @@
             <tr>
                 <td>@Html.LabelFor(model => model.ShippedDate)</td>
                 <td>
-                    @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })
+                    @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date", @Value = ViewBag.ShippedDate })
                     @Html.ValidationMessageFor(model => model.ShippedDate)
                 </td>
                 <td></td>
@@ -117,14 +126,5 @@
                 <td></td>
             </tr>
         </table>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Update" class="btn btn-default" />
-            </div>
-        </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

@@ -30,7 +30,6 @@ namespace WebApplication2.Controllers
         {
             ViewBag.EmpCodeData = this.codeService.GetEmp(-1);
             ViewBag.ShipCodeData = this.codeService.GetShipper(-1);
-            Models.OrderService orderService = new Models.OrderService();
             ViewBag.SearchResult = orderService.GetOrderByCondtioin(arg);
             return View("Index");
         }
@@ -56,9 +55,8 @@ namespace WebApplication2.Controllers
         {
             if (ModelState.IsValid)
             {
-                Models.OrderService orderService = new Models.OrderService();
                 int a = orderService.InsertOrder(order);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index/" + a);
             }
             return View(order);
             //return View();
@@ -67,7 +65,6 @@ namespace WebApplication2.Controllers
         {
             ViewBag.EmpCodeData = this.codeService.GetEmp();
             ViewBag.ShipCodeData = this.codeService.GetShipper();
-            Models.OrderService orderService = new Models.OrderService();
             orderService.InsertOrder(order);
             return View("Index");
         }*/
@@ -83,8 +80,11 @@ namespace WebApplication2.Controllers
             ViewBag.EmpCodeData = this.codeService.GetEmp(Convert.ToInt32(order.EmpId));
             ViewBag.ShipCodeData = this.codeService.GetShipper(Convert.ToInt32(order.ShipperId));
             ViewBag.CustCodeData = this.codeService.GetCustomer(Convert.ToInt32(order.CustId));
+            ViewBag.OrderDate = string.Format("{0:yyyy-MM-dd}", order.OrderDate);
+            ViewBag.RequireDdate = string.Format("{0:yyyy-MM-dd}", order.RequireDdate);
+            ViewBag.ShippedDate = string.Format("{0:yyyy-MM-dd}", order.ShippedDate);
             ViewBag.OrderData = order;
-            return View();
+            return View(new Models.Order());
         }
         /// <summary>
         /// 修改訂單存檔的Action
@@ -94,9 +94,19 @@ namespace WebApplication2.Controllers
         [HttpPost()]
         public ActionResult Update(Models.Order order)
         {
-            Models.OrderService orderService = new Models.OrderService();
             orderService.UpdateOrder(order);
+            ViewBag.EmpCodeData = this.codeService.GetEmp(-1);
+            ViewBag.ShipCodeData = this.codeService.GetShipper(-1);
             return View("Index");
+            //ViewBag.EmpCodeData = this.codeService.GetEmp(Convert.ToInt32(order.EmpId));
+            //ViewBag.ShipCodeData = this.codeService.GetShipper(Convert.ToInt32(order.ShipperId));
+            //ViewBag.CustCodeData = this.codeService.GetCustomer(Convert.ToInt32(order.CustId));
+            //ViewBag.OrderDate = string.Format("{0:yyyy-MM-dd}", order.OrderDate);
+            //ViewBag.RequireDdate = string.Format("{0:yyyy-MM-dd}", order.RequireDdate);
+            //ViewBag.ShippedDate = string.Format("{0:yyyy-MM-dd}", order.ShippedDate);
+            //ViewBag.OrderData = order;
+            //orderService.UpdateOrder(order);
+            //return View(order);
         }
         /// <summary>
         /// 依訂單ID刪除訂單
@@ -108,7 +118,6 @@ namespace WebApplication2.Controllers
         {
             try
             {
-                Models.OrderService orderService = new Models.OrderService();
                 orderService.DeleteOrderById(orderId);
                 return this.Json(true);
             }

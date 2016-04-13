@@ -8,6 +8,7 @@
 @using (Html.BeginForm("Index", "Order", FormMethod.Post, new { id = "Form1" }))
 {
     <div id="SearchConditionSection">
+        <hr />
         <table class="table table-bordered">
             <tr>
                 <td>訂單編號</td>
@@ -30,7 +31,7 @@
             <tr>
                 <td>出貨公司</td>
                 <td colspan="3">
-                    @Html.DropDownListFor(model => model.ShipperId, (List<SelectListItem>)ViewBag.ShipCodeData,"請選擇")
+                    @Html.DropDownListFor(model => model.ShipperId, (List<SelectListItem>)ViewBag.ShipCodeData, "請選擇")
                 </td>
             </tr>
             <tr>

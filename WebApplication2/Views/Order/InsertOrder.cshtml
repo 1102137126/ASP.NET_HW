@@ -13,6 +13,7 @@
     @Html.ValidationSummary(true)
 
     <table class="table table-bordered">
+        <hr />
         <tr>
             <td>
                 @Html.LabelFor(model => model.CustId)
@@ -38,22 +39,20 @@
         <tr>
             <td>@Html.LabelFor(model => model.OrderDate)</td>
             <td>
-                @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
+                @Html.TextBoxFor(model => model.OrderDate, new { @type = "date", @Value = @DateTime.Now.ToString("yyyy-MM-dd") })
                 @Html.ValidationMessageFor(model => model.OrderDate)
             </td>
             <td>@Html.LabelFor(model => model.RequireDdate)</td>
             <td>
-                @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date" })
+                @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date", @Value = @DateTime.Now.ToString("yyyy-MM-dd") })
                 @Html.ValidationMessageFor(model => model.RequireDdate)
             </td>
         </tr>
 
-
-
         <tr>
             <td>@Html.LabelFor(model => model.ShippedDate)</td>
             <td>
-                @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })
+                @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date", @Value = @DateTime.Now.ToString("yyyy-MM-dd") })
                 @Html.ValidationMessageFor(model => model.ShippedDate)
             </td>
             <td></td>
@@ -145,7 +144,6 @@
             }
         </tbody>
     </table>
-
 }
 @section scripts{
     <script type="text/javascript">

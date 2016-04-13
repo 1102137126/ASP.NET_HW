@@ -25,14 +25,14 @@ namespace WebApplication2.Models
         /// </summary>
         public int InsertOrder(Models.Order order)
         {
-            string sql = @"Insert INTO Sales.Orders(
+            string sql = @"INSERT INTO Sales.Orders(
 	                        CustomerID,EmployeeID,orderdate,requireddate,shippeddate,shipperid,freight,
 	                        shipname,shipaddress,shipcity,shipregion,shippostalcode,shipcountry
                         )VALUES(
 							@custid,@empid,@orderdate,@requireddate,@shippeddate,@shipperid,@freight,
 							@shipname,@shipaddress,@shipcity,@shipregion,@shippostalcode,@shipcountry
 						)
-						Select SCOPE_IDENTITY()
+						SELECT SCOPE_IDENTITY()
 						";
             int orderId;
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
@@ -65,7 +65,7 @@ namespace WebApplication2.Models
         {
             try
             {
-                string sql = "Delete FROM Sales.Orders Where orderid=@orderid";
+                string sql = "DELETE FROM Sales.Orders Where orderid=@orderid";
                 using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
                 {
                     conn.Open();
@@ -85,6 +85,41 @@ namespace WebApplication2.Models
         /// </summary>
         public void UpdateOrder(Models.Order order)
         {
+            try
+            {
+                string sql = @"UPDATE Sales.Orders SET 
+	                        CustomerID=@custid,EmployeeID=@empid,orderdate=@orderdate,requireddate=@requireddate,
+                            shippeddate=@shippeddate,shipperid=@shipperid,freight=@freight,shipname=@shipname,
+                            shipaddress=@shipaddress,shipcity=@shipcity,shipregion=@shipregion,
+                            shippostalcode=@shippostalcode,shipcountry=@shipcountry                          
+                            WHERE orderid=@orderid";
+                using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.Add(new SqlParameter("@orderid", order.OrderId));
+                    cmd.Parameters.Add(new SqlParameter("@custid", order.CustId));
+                    cmd.Parameters.Add(new SqlParameter("@empid", order.EmpId));
+                    cmd.Parameters.Add(new SqlParameter("@orderdate", order.OrderDate));
+                    cmd.Parameters.Add(new SqlParameter("@requireddate", order.RequireDdate));
+                    cmd.Parameters.Add(new SqlParameter("@shippeddate", order.ShippedDate));
+                    cmd.Parameters.Add(new SqlParameter("@shipperid", order.ShipperId));
+                    cmd.Parameters.Add(new SqlParameter("@freight", order.Freight));
+                    cmd.Parameters.Add(new SqlParameter("@shipname", order.ShipName));
+                    cmd.Parameters.Add(new SqlParameter("@shipaddress", order.ShipAddress));
+                    cmd.Parameters.Add(new SqlParameter("@shipcity", order.ShipCity));
+                    cmd.Parameters.Add(new SqlParameter("@shipregion", order.ShipRegion));
+                    cmd.Parameters.Add(new SqlParameter("@shippostalcode", order.ShipPostalCode));
+                    cmd.Parameters.Add(new SqlParameter("@shipcountry", order.ShipCountry));
+
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         /// <summary>
         /// 依照訂單ID取得訂單資料
@@ -180,7 +215,7 @@ namespace WebApplication2.Models
                     CustName = row["CustName"].ToString(),
                     EmpId = (int)row["EmployeeID"],
                     EmpName = row["EmpName"].ToString(),
-                    Freight = (decimal)row["Freight"],//(decimal)row["Freight"],
+                    Freight = (decimal)row["Freight"],
                     OrderDate = row["OrderDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["OrderDate"],
                     OrderId = (int)row["OrderId"],
                     RequireDdate = row["RequireDdate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["RequireDdate"],
