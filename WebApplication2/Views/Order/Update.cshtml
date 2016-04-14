@@ -73,7 +73,7 @@
                 </td>
                 <td>@Html.LabelFor(model => model.Freight)</td>
                 <td>
-                    @Html.EditorFor(model => model.Freight, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.Freight } })
+                    @Html.EditorFor(model => model.Freight, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.OrderData.Freight, @type= "number" } })
                     @Html.ValidationMessageFor(model => model.Freight)
                 </td>
             </tr>

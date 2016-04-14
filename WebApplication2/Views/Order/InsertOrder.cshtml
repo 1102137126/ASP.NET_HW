@@ -67,7 +67,7 @@
             </td>
             <td>@Html.LabelFor(model => model.Freight)</td>
             <td>
-                @Html.TextBoxFor(model => model.Freight)
+                @Html.TextBoxFor(model => model.Freight, new { @type = "number" })
                 @Html.ValidationMessageFor(model => model.Freight)
             </td>
         </tr>
