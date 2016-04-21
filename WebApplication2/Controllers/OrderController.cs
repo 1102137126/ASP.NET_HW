@@ -78,7 +78,7 @@ namespace WebApplication2.Controllers
         public ActionResult Update(string id)
         {
             Models.Order order = this.orderService.GetOrderById(id);
-            Models.OrderDetails orderDetails = this.orderDetailsService.GetOrderByorderId(id);
+            order.OrderDetails = this.orderDetailsService.GetOrderByOrderId(id);
             ViewBag.EmpCodeData = this.codeService.GetEmp(Convert.ToInt32(order.EmpId));
             ViewBag.ShipCodeData = this.codeService.GetShipper(Convert.ToInt32(order.ShipperId));
             ViewBag.CustCodeData = this.codeService.GetCustomer(Convert.ToInt32(order.CustId));
@@ -86,8 +86,7 @@ namespace WebApplication2.Controllers
             ViewBag.RequireDdate = string.Format("{0:yyyy-MM-dd}", order.RequireDdate);
             ViewBag.ShippedDate = string.Format("{0:yyyy-MM-dd}", order.ShippedDate);
             ViewBag.OrderData = order;
-            ViewBag.OrderDetailsData = orderDetails;
-            return View(new Models.Order());
+            return View(order);
         }
         /// <summary>
         /// 修改訂單存檔的Action

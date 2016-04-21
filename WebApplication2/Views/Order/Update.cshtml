@@ -117,6 +117,21 @@
                 </td>
             </tr>
             <tr>
+                <td>產品名稱</td>
+                <td>單價</td>
+                <td>數量</td>
+                <td>折扣</td>
+            </tr>
+            @foreach (var item in (Model.OrderDetails))
+            {
+            <tr id='@item.OrderId'>
+                <td>@item.ProductName</td>
+                <td>@item.UnitPrice</td>
+                <td>@item.Qty</td>
+                <td>@item.Discount</td>
+            </tr>
+            }
+            <tr>
                 <td></td>
                 <td>
                     <input type="submit" value="存檔" />

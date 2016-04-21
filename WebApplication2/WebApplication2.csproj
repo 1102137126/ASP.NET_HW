@@ -212,6 +212,7 @@
     <Compile Include="Models\OrderDetails.cs" />
     <Compile Include="Models\OrderSearchArg.cs" />
     <Compile Include="Models\OrderService.cs" />
+    <Compile Include="Models\ViewModel\OrderViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

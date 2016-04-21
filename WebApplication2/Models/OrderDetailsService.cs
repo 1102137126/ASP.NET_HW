@@ -43,11 +43,12 @@ namespace WebApplication2.Models
             }
             return null;
         }*/
-        public Models.OrderDetails GetOrderByorderId(string orderId)
+        public List<Models.OrderDetails> GetOrderByOrderId(string orderId)
         {
             DataTable dt = new DataTable();
-            string sql = @"SELECT OrderID, ProductID, UnitPrice, Qty, Discount
-                        FROM Sales.OrderDetails
+            string sql = @"SELECT OrderID, OD.ProductID, OD.UnitPrice, Qty, Discount, ProductName
+                        FROM Sales.OrderDetails AS OD
+                        INNER JOIN Production.Products AS P ON OD.ProductID = P.ProductID
                         WHERE OrderID=@OrderId";
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
             {
@@ -59,8 +60,10 @@ namespace WebApplication2.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapOrderDetailsDataToList(dt).FirstOrDefault();
+            return this.MapOrderDetailsDataToList(dt);
         }
+
+
         private List<Models.OrderDetails> MapOrderDetailsDataToList(DataTable orderData)
         {
             List<Models.OrderDetails> result = new List<OrderDetails>();
@@ -70,10 +73,11 @@ namespace WebApplication2.Models
                 result.Add(new OrderDetails()
                 {
                     OrderId = (int)row["OrderID"],
+                    ProductName = (string)row["ProductName"],
                     ProductId = (int)row["ProductID"],
-                    UnitPrice = (int)row["UnitPrice"],
-                    Qty = (decimal)row["Qty"],
-                    Discount = (int)row["Discount"]
+                    UnitPrice = (decimal)row["UnitPrice"],
+                    Qty = (short)row["Qty"],
+                    Discount = (decimal)row["Discount"]
                 });
             }
             return result;
