@@ -20,29 +20,41 @@ namespace WebApplication2.Models
             return
                 System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
         }
-        /*public List<Models.Order> InsertOrderDetail(Models.OrderDetails orderDetail)
+        /// <summary>
+        /// 新增訂單明細
+        /// </summary>
+        /// <param name="orderDetail"></param>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public int InsertOrderDetail(List<Models.OrderDetails> orderDetail, int orderId)
         {
-            string sql = @"INSERT INTO Sales.Orders(
-	                        CustomerID,EmployeeID,orderdate,requireddate,shippeddate,shipperid,freight,
-	                        shipname,shipaddress,shipcity,shipregion,shippostalcode,shipcountry
-                        )VALUES(
-							@custid,@empid,@orderdate,@requireddate,@shippeddate,@shipperid,@freight,
-							@shipname,@shipaddress,@shipcity,@shipregion,@shippostalcode,@shipcountry
-						)
-						SELECT SCOPE_IDENTITY()
-						";
-            int orderId;
-            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            foreach (Models.OrderDetails row in orderDetail)
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.Add(new SqlParameter("@custid", order.CustId));
+                string sql = @"INSERT INTO Sales.OrderDetails(
+	                            OrderID, ProductID, UnitPrice, Qty, Discount
+                            )VALUES(
+							    @OrderId, @ProductID, @UnitPrice, @Qty, @Discount
+						    )
+						    ";
+                int result;
+                using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.Add(new SqlParameter("@OrderId", orderId));
+                    cmd.Parameters.Add(new SqlParameter("@ProductID", row.ProductId));
+                    cmd.Parameters.Add(new SqlParameter("@UnitPrice", row.UnitPrice));
+                    cmd.Parameters.Add(new SqlParameter("@Qty", row.Qty));
+                    cmd.Parameters.Add(new SqlParameter("@Discount", row.Discount));
 
-                orderId = Convert.ToInt32(cmd.ExecuteScalar());
-                conn.Close();
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                    conn.Close();
+                }
             }
-            return null;
-        }*/
+
+            return 0;
+        }
+
         public List<Models.OrderDetails> GetOrderByOrderId(string orderId)
         {
             DataTable dt = new DataTable();

@@ -57,6 +57,7 @@ namespace WebApplication2.Controllers
             if (ModelState.IsValid)
             {
                 int a = orderService.InsertOrder(order);
+                orderDetailsService.InsertOrderDetail(order.OrderDetails, a);
                 return RedirectToAction("Index/" + a);
             }
             return View(order);
