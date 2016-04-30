@@ -32,8 +32,7 @@ namespace WebApplication2.Models
 							@custid,@empid,@orderdate,@requireddate,@shippeddate,@shipperid,@freight,
 							@shipname,@shipaddress,@shipcity,@shipregion,@shippostalcode,@shipcountry
 						)
-						SELECT SCOPE_IDENTITY()
-						";
+						SELECT SCOPE_IDENTITY()";
             int orderId;
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
             {

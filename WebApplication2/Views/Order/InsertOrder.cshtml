@@ -111,6 +111,12 @@
             </td>
         </tr>
         <tr>
+            <td><label>訂單金額總計</label></td>
+            <td id="total">0</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
             <td></td>
             <td>
                 <input type="submit" value="存檔" />
@@ -136,9 +142,9 @@
             {
                 <tr>
                     <td>@Html.DropDownListFor(m => Model.OrderDetails[i].ProductId, (List<SelectListItem>)ViewBag.ProductCodeData, new { @class = "ProductId" })</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].UnitPrice, new { @class = "UnitPrice" })</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].Qty, new { @class = "Qty" })</td>
-                    <td></td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].UnitPrice, new { @class = "UnitPrice", @onchange = "onchangeValue(this)", Type = "number" })</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].Qty, new { @class = "Qty", @onchange = "onchangeValue(this)", Type = "number" })</td>
+                    <td>0</td>
                     <td><button type="button" class="btnRemove">取消</button></td>
                 </tr>
             }
@@ -147,6 +153,20 @@
 }
 @section scripts{
     <script type="text/javascript">
+        //當數量、單價改變時 重算小計
+        function onchangeValue(e) {
+            var price = e.parentNode.parentNode.childNodes[3].childNodes[0].value;
+            var qty = e.parentNode.parentNode.childNodes[5].childNodes[0].value;
+            var subtotal = e.parentNode.parentNode.childNodes[7];
+            subtotal.innerHTML = price * qty;
+            var sum = 0;
+            for (var i = 0 ; i < $('#tbContent tr').length; i++) {
+                sum += $('.Qty').eq(i).val() * $('.UnitPrice').eq(i).val();                
+            }
+            $("#total").html(sum);
+            console.log(sum);
+        }
+
         //明細資料範本
         var trtemplate = $('#tbContent tr').eq(0).html();
 

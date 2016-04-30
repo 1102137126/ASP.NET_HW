@@ -98,10 +98,29 @@ namespace WebApplication2.Controllers
         [HttpPost()]
         public ActionResult Update(Models.Order order)
         {
-            orderService.UpdateOrder(order);
+            //orderService.UpdateOrder(order);
+            orderDetailsService.UpdateOrderDeail(order.OrderDetails, order.OrderId);
             ViewBag.EmpCodeData = this.codeService.GetEmp();
             ViewBag.ShipCodeData = this.codeService.GetShipper();
             return View("Index");
+        }
+        /// <summary>
+        /// 依訂單ID跟產品ID刪除訂單明細
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPost()]
+        public JsonResult DeleteOrderDetail(string orderId, string productId)
+        {
+            try
+            {
+                orderDetailsService.DeleteOrderDetailByProductId(orderId, productId);
+                return this.Json(true);
+            }
+            catch (Exception)
+            {
+                return this.Json(false);
+            }
         }
         /// <summary>
         /// 依訂單ID刪除訂單
@@ -114,11 +133,11 @@ namespace WebApplication2.Controllers
             try
             {
                 orderService.DeleteOrderById(orderId);
+                orderDetailsService.DeleteOrderDetail(orderId);
                 return this.Json(true);
             }
             catch (Exception)
             {
-
                 return this.Json(false);
             }
         }

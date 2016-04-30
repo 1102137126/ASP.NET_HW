@@ -34,8 +34,7 @@ namespace WebApplication2.Models
 	                            OrderID, ProductID, UnitPrice, Qty, Discount
                             )VALUES(
 							    @OrderId, @ProductID, @UnitPrice, @Qty, @Discount
-						    )
-						    ";
+						    )";
                 int result;
                 using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
                 {
@@ -51,7 +50,6 @@ namespace WebApplication2.Models
                     conn.Close();
                 }
             }
-
             return 0;
         }
 
@@ -75,6 +73,102 @@ namespace WebApplication2.Models
             return this.MapOrderDetailsDataToList(dt);
         }
 
+        public void UpdateOrderDeail(List<Models.OrderDetails> orderDetail, int orderId)
+        {
+            foreach (Models.OrderDetails row in orderDetail)
+            {
+                string sql = @"SELECT count(*)
+                        FROM Sales.OrderDetails
+                        WHERE OrderID=@OrderId and ProductID=@ProductId";
+                int result;
+                using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.Add(new SqlParameter("@OrderId", orderId));
+                    cmd.Parameters.Add(new SqlParameter("@ProductID", row.ProductId));
+
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                    conn.Close();
+                }
+                if (result == 1)//已存在
+                {
+                    sql = @"UPDATE Sales.OrderDetails SET 
+                                UnitPrice=@UnitPrice,Qty=@Qty,Discount=@Discount
+                            WHERE OrderID=@OrderId and ProductID=@ProductId";
+                } else {
+                    sql = @"INSERT INTO Sales.OrderDetails(
+	                            OrderID, ProductID, UnitPrice, Qty, Discount
+                            )VALUES(
+						        @OrderId, @ProductID, @UnitPrice, @Qty, @Discount
+					        )";
+                }
+                using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.Add(new SqlParameter("@OrderId", orderId));
+                    cmd.Parameters.Add(new SqlParameter("@ProductID", row.ProductId));
+                    cmd.Parameters.Add(new SqlParameter("@UnitPrice", row.UnitPrice));
+                    cmd.Parameters.Add(new SqlParameter("@Qty", row.Qty));
+                    cmd.Parameters.Add(new SqlParameter("@Discount", row.Discount));
+
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                } 
+            }
+        }
+
+        /// <summary>
+        /// 刪除訂單明細 By productId
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="productId"></param>
+        public void DeleteOrderDetailByProductId(String orderId, String productId)
+        {
+            try
+            {
+                string sql = "DELETE FROM Sales.OrderDetails  Where OrderID=@orderId and ProductID=@productId";
+                using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.Add(new SqlParameter("@orderId", orderId));
+                    cmd.Parameters.Add(new SqlParameter("@productId", productId));
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 刪除訂單明細
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="productId"></param>
+        public void DeleteOrderDetail(String orderId)
+        {
+            try
+            {
+                string sql = "DELETE FROM Sales.OrderDetails  Where OrderID=@orderId";
+                using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.Add(new SqlParameter("@orderId", orderId));
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         private List<Models.OrderDetails> MapOrderDetailsDataToList(DataTable orderData)
         {

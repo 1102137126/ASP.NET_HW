@@ -143,29 +143,33 @@
                 <td>小計</td>
                 <td></td>
             </tr>
-            <tbody id="trtemplate" style="display:none;">
-                <tr>
-                    <td>@Html.DropDownListFor(m => Model.OrderDetails[0].ProductId, (List<SelectListItem>)ViewBag.ProductCodeData, new { @class = "ProductId" })</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[0].UnitPrice, new { @class = "UnitPrice", @Value = 0, @onchange = "onchangeValue(this)", Type="number" })</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[0].Qty, new { @class = "Qty", @Value = 0 ,@onchange = "onchangeValue(this)", Type = "number" })</td>
-                    <td>0</td>
-                    <td><button type="button" class="btnRemove">刪除</button></td>
-                </tr>
-            </tbody>
             <tbody id="tbContent">                
                 @foreach (var item in (Model.OrderDetails))
                 {
                     <tr>
-                        <td>@Html.TextBoxFor(m => Model.OrderDetails[0].ProductName, new { @class = "ProductId" , @Value = item.ProductName, @readonly = true })</td>
+                        <td>@Html.TextBoxFor(m => Model.OrderDetails[0].ProductName, new { @class = "ProductName", @Value = item.ProductName, @readonly = true })</td>
                         <td>@Html.TextBoxFor(m => Model.OrderDetails[0].UnitPrice, new { @class = "UnitPrice", @Value = item.UnitPrice, @onchange = "onchangeValue(this)", Type = "number" })</td>
                         <td>@Html.TextBoxFor(m => Model.OrderDetails[0].Qty, new { @class = "Qty", @Value = item.Qty, @onchange = "onchangeValue(this)", Type = "number" })</td>
                         <td>@Math.Round(@item.UnitPrice * @item.Qty)</td>
                         <td>
+                            <button type="button" class="btnOrderDetailRemove" value=@item.ProductId>刪除</button>
+                            <input class="hidOrderId" type="hidden" value='@item.OrderId' />
                             @Html.TextBoxFor(m => Model.OrderDetails[0].ProductId, new { @class = "ProductId", @Value = item.ProductId, @type="hidden"})
-                            <button type="button" class="btnRemove">刪除</button>
                         </td>
                     </tr>
                 }
+            </tbody>
+            <tbody id="trtemplate" style="display:none;">
+                <tr>
+                    <td>@Html.DropDownListFor(m => Model.OrderDetails[0].ProductId, (List<SelectListItem>)ViewBag.ProductCodeData, new { @class = "ProductId" })</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[0].UnitPrice, new { @class = "UnitPrice", @Value = 0, @onchange = "onchangeValue(this)", Type = "number" })</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[0].Qty, new { @class = "Qty", @Value = 0, @onchange = "onchangeValue(this)", Type = "number" })</td>
+                    <td>0</td>
+                    <td>
+                        @Html.TextBoxFor(m => Model.OrderDetails[0].ProductName, new { @class = "ProductName", @type = "hidden", @Value = "" })
+                        <button type="button" class="btnRemove">刪除</button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -186,6 +190,27 @@
         //新增一列名資料
         $("#addNewDetial").click(function (e) {
             $('#tbContent').append('<tr>' + trtemplate + '</tr>');
+        });
+
+        //移除OrderDetail + TR
+        $('#tbContent').on('click', '.btnOrderDetailRemove', function (e) {
+            if ($('#tbContent tr').length > 1) {
+                console.log($(this).val());
+                var tr = $(this).closest('tr')
+                $.ajax({
+                    type: "POST",
+                    url: "/Order/DeleteOrderDetail",
+                    data: {
+                        orderId: $(this).next().val(),
+                        productId: $(this).val()
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        $(tr).remove();
+                    }
+                });
+                return false;
+            }
         });
 
         //移除TR
