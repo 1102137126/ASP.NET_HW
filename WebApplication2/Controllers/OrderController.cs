@@ -1,8 +1,10 @@
-﻿using System;
+﻿using KendoGridBinder;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApplication2.Models;
 
 namespace WebApplication2.Controllers
 {
@@ -98,7 +100,7 @@ namespace WebApplication2.Controllers
         [HttpPost()]
         public ActionResult Update(Models.Order order)
         {
-            //orderService.UpdateOrder(order);
+            orderService.UpdateOrder(order);
             orderDetailsService.UpdateOrderDeail(order.OrderDetails, order.OrderId);
             ViewBag.EmpCodeData = this.codeService.GetEmp();
             ViewBag.ShipCodeData = this.codeService.GetShipper();
@@ -150,7 +152,31 @@ namespace WebApplication2.Controllers
             return PartialView("_SysDatePartial");
         }*/
 
-        
+        public JsonResult code(KendoGridRequest request, string keywd)
+        {
+            var result = this.codeService.GetProduct();
+            switch (keywd)
+            {
+                case "#Product":
+                    result = this.codeService.GetProduct();
+                    break;
+                case "#ShipperId":
+                    result = this.codeService.GetShipper();
+                    break;
+                case "#EmpId":
+                    result = this.codeService.GetEmp();
+                    break;
+                case "#CustName":
+                    result = this.codeService.GetCustomer();
+                    break;
+                default:
+                    result = this.codeService.GetCustomer();
+                    break;
+            }
+            //return Json(new KendoGrid<SelectListItem>(request, result));
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet()]
         public JsonResult TestJson()
         {

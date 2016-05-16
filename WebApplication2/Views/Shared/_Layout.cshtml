@@ -1,14 +1,28 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>叡揚資訊 - @ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-</head>
+        <link href="~/Content/kendo.material.min.css" rel="stylesheet" />
+        <link href="~/Content/kendo.default.min.css" rel="stylesheet" />
+        <link href="~/Content/kendo.black.min.css" rel="stylesheet" />
+        <link href="~/Content/kendo.common.min.css" rel="stylesheet" />
+        <link href="~/Content/kendo.dataviz.blueopal.min.css" rel="stylesheet" />
+
+        @*DatePicker 有差這行*@
+        <link href="//kendo.cdn.telerik.com/2016.2.504/styles/kendo.material.min.css" rel="stylesheet" />
+
+        <script src="~/Scripts/jquery.min.js"></script>
+        <script src="~/Scripts/kendo.web.min.js"></script>
+        <script src="~/Scripts/kendo.all.min.js"></script>
+        <script src="~/Scripts/jszip.min.js"></script>
+
+        <title>叡揚資訊 - @ViewBag.Title</title>
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+    </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -37,7 +51,7 @@
             <p>&copy; @DateTime.Now.Year - 我的 ASP.NET 應用程式</p>
         </footer>
     </div>
-        @Scripts.Render("~/bundles/jquery")
+        @*@Scripts.Render("~/bundles/jquery")*@
         @RenderSection("scripts", required: false)
     @Scripts.Render("~/bundles/bootstrap")
 </body>

@@ -112,7 +112,7 @@
         </tr>
         <tr>
             <td><label>訂單金額總計</label></td>
-            <td id="total">0</td>
+            <td id="total">$ 0.00</td>
             <td></td>
             <td></td>
         </tr>
@@ -137,14 +137,13 @@
             <td></td>
         </tr>
         <tbody id="tbContent">
-
             @for (int i = 0; i < Model.OrderDetails.Count; i++)
             {
                 <tr>
                     <td>@Html.DropDownListFor(m => Model.OrderDetails[i].ProductId, (List<SelectListItem>)ViewBag.ProductCodeData, new { @class = "ProductId" })</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].UnitPrice, new { @class = "UnitPrice", @onchange = "onchangeValue(this)", Type = "number" })</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].Qty, new { @class = "Qty", @onchange = "onchangeValue(this)", Type = "number" })</td>
-                    <td>0</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].UnitPrice, new { @class = "UnitPrice", Type = "number" })</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].Qty, new { @class = "Qty", Type = "number", @Value=1 })</td>
+                    <td>$ 0.00</td>
                     <td><button type="button" class="btnRemove">取消</button></td>
                 </tr>
             }
@@ -153,19 +152,22 @@
 }
 @section scripts{
     <script type="text/javascript">
-        //當數量、單價改變時 重算小計
-        function onchangeValue(e) {
-            var price = e.parentNode.parentNode.childNodes[3].childNodes[0].value;
-            var qty = e.parentNode.parentNode.childNodes[5].childNodes[0].value;
-            var subtotal = e.parentNode.parentNode.childNodes[7];
-            subtotal.innerHTML = price * qty;
+        //總金額、小計 加總
+        function subTotal() {
+            var price = $(this)[0].parentNode.parentNode.children[1].children[0].value;
+            var qty = $(this)[0].parentNode.parentNode.children[2].children[0].value;
+            var subtotal = $(this)[0].parentNode.parentNode.children[3];
+            subtotal.innerHTML = '$ ' + kendo.toString(price * qty, "n");
             var sum = 0;
             for (var i = 0 ; i < $('#tbContent tr').length; i++) {
-                sum += $('.Qty').eq(i).val() * $('.UnitPrice').eq(i).val();                
+                sum += ($('.Qty').eq(i).val() * $('.UnitPrice').eq(i).val()).valueOf();
             }
-            $("#total").html(sum);
-            console.log(sum);
+            $("#total").html('$ ' + kendo.toString(sum, "n"));
         }
+
+        //當數量、單價改變時 重算小計
+        $('#tbContent').on('keyup', '[type=number]', subTotal);
+        $('#tbContent').on('change', '[type=number]', subTotal);
 
         //明細資料範本
         var trtemplate = $('#tbContent tr').eq(0).html();

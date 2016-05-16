@@ -1,28 +1,43 @@
-﻿@model WebApplication2.Models.ViewModel.OrderViewModel
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @*<base href="http://demos.telerik.com/kendo-ui/datepicker/index">
+    <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.2.504/styles/kendo.common-material.min.css" />*@
+    <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.2.504/styles/kendo.material.min.css" />
 
-@{
-    ViewBag.Title = "Index2";
-    Layout = "~/Views/_LayoutPage1.cshtml";
-}
+    @*<script src="//kendo.cdn.telerik.com/2016.2.504/js/jquery.min.js"></script>*@
+    <script src="//kendo.cdn.telerik.com/2016.2.504/js/kendo.all.min.js"></script>
+</head>
+<body>
+    <hr>
+    <hr>
+    <hr>
+    <hr>
+    <hr>
 
-<h2>Index2</h2>
+            <input id="datepicker" value="" style="width: 100%" />
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    <td>@Html.LabelFor(model => model.Order.OrderId)</td>
-    <div class="form-horizontal">
-        <h4>OrderViewModel</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
+            @*<h4 style="margin-top: 2em;">Add to archive mail from:</h4>
+            <input id="monthpicker" value="November 2011" style="width: 100%" />
+            </p>*@
+        <script>
+            $(document).ready(function() {
+                // create DatePicker from input HTML element
+                $("#datepicker").kendoDatePicker();
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+                //$("#monthpicker").kendoDatePicker({
+                //    // defines the start view
+                //    start: "year",
+
+                //    // defines when the calendar should return date
+                //    depth: "year",
+
+                //    // display month and year in the input
+                //    format: "MMMM yyyy"
+                //});
+            });
+        </script>
+
+
+</body>
+</html>

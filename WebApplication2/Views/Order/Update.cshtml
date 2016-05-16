@@ -124,6 +124,12 @@
                 </td>
             </tr>
             <tr>
+                <td><label>訂單金額總計</label></td>
+                <td id="total">$ 0.00</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td></td>
                 <td>
                     <input type="submit" value="存檔" />
@@ -147,10 +153,11 @@
                 @foreach (var item in (Model.OrderDetails))
                 {
                     <tr>
+                        @*<td>@Html.DropDownListFor(m => Model.OrderDetails[0].ProductId, (List<SelectListItem>)ViewBag.ProductCodeData, new { @class = "ProductId", @Value = item.ProductId })</td>*@
                         <td>@Html.TextBoxFor(m => Model.OrderDetails[0].ProductName, new { @class = "ProductName", @Value = item.ProductName, @readonly = true })</td>
-                        <td>@Html.TextBoxFor(m => Model.OrderDetails[0].UnitPrice, new { @class = "UnitPrice", @Value = item.UnitPrice, @onchange = "onchangeValue(this)", Type = "number" })</td>
-                        <td>@Html.TextBoxFor(m => Model.OrderDetails[0].Qty, new { @class = "Qty", @Value = item.Qty, @onchange = "onchangeValue(this)", Type = "number" })</td>
-                        <td>@Math.Round(@item.UnitPrice * @item.Qty)</td>
+                        <td>@Html.TextBoxFor(m => Model.OrderDetails[0].UnitPrice, new { @class = "UnitPrice", @Value = item.UnitPrice, Type = "number" })</td>
+                        <td>@Html.TextBoxFor(m => Model.OrderDetails[0].Qty, new { @class = "Qty", @Value = item.Qty, Type = "number" })</td>
+                        <td>$ @((@item.UnitPrice * @item.Qty).ToString("#,###.00"))</td>
                         <td>
                             <button type="button" class="btnOrderDetailRemove" value=@item.ProductId>刪除</button>
                             <input class="hidOrderId" type="hidden" value='@item.OrderId' />
@@ -162,9 +169,9 @@
             <tbody id="trtemplate" style="display:none;">
                 <tr>
                     <td>@Html.DropDownListFor(m => Model.OrderDetails[0].ProductId, (List<SelectListItem>)ViewBag.ProductCodeData, new { @class = "ProductId" })</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[0].UnitPrice, new { @class = "UnitPrice", @Value = 0, @onchange = "onchangeValue(this)", Type = "number" })</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[0].Qty, new { @class = "Qty", @Value = 0, @onchange = "onchangeValue(this)", Type = "number" })</td>
-                    <td>0</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[0].UnitPrice, new { @class = "UnitPrice", @Value = 0, Type = "number" })</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[0].Qty, new { @class = "Qty", @Value = 1, Type = "number" })</td>
+                    <td>$ 0.00</td>
                     <td>
                         @Html.TextBoxFor(m => Model.OrderDetails[0].ProductName, new { @class = "ProductName", @type = "hidden", @Value = "" })
                         <button type="button" class="btnRemove">刪除</button>
@@ -176,13 +183,27 @@
 }
 @section scripts{
     <script type="text/javascript">
-        //當數量、單價改變時 重算小計
-        function onchangeValue(e) {
-            var price = e.parentNode.parentNode.childNodes[3].childNodes[0].value;
-            var qty = e.parentNode.parentNode.childNodes[5].childNodes[0].value;
-            var subtotal = e.parentNode.parentNode.childNodes[7];
-            subtotal.innerHTML = price * qty;
+        //總金額加總
+        function sumMoney() {
+            var sum = 0;
+            for (var i = 0 ; i < $('#tbContent tr').length; i++) {
+                sum += ($('.Qty').eq(i).val() * $('.UnitPrice').eq(i).val()).valueOf();
+            }
+            $("#total").html('$ ' + kendo.toString(sum,"n"));
         }
+
+        //小計加總
+        function subTotal() {
+            var price = $(this)[0].parentNode.parentNode.children[1].children[0].value;
+            var qty = $(this)[0].parentNode.parentNode.children[2].children[0].value;
+            var subtotal = $(this)[0].parentNode.parentNode.children[3];
+            subtotal.innerHTML = '$ ' + kendo.toString(price * qty, "n");
+            sumMoney();
+        }
+
+        //當數量、單價改變時 重算小計
+        $('#tbContent').on('keyup', '[type=number]', subTotal);
+        $('#tbContent').on('change', '[type=number]', subTotal);
 
         //明細資料範本
         var trtemplate = $('#trtemplate tr').eq(0).html();
@@ -227,5 +248,8 @@
                 $('.UnitPrice').eq(i).attr('name', 'OrderDetails[' + i + '].UnitPrice');
             }
         });
+
+        //初始總金額
+        $(document).ready(sumMoney());
     </script>
 }

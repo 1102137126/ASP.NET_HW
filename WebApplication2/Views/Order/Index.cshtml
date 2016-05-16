@@ -25,36 +25,38 @@
             <tr>
                 <td>負責員工</td>
                 <td colspan="3">
-                    @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData, "請選擇")
+                    @*<input id="EmpId" name="EmpId" class="kendoComboBox" />*@
+                    @Html.TextBoxFor(model => model.EmpId, new { @class = "kendoComboBox" })
                 </td>
             </tr>
             <tr>
                 <td>出貨公司</td>
                 <td colspan="3">
-                    @Html.DropDownListFor(model => model.ShipperId, (List<SelectListItem>)ViewBag.ShipCodeData, "請選擇")
+                    @*<input id="ShipperId" name="ShipperId" class="kendoComboBox" />*@
+                    @Html.TextBoxFor(model => model.ShipperId, new { @class = "kendoComboBox" })
                 </td>
             </tr>
             <tr>
                 <td>訂購日期</td>
                 <td>
-                    @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
+                    @Html.TextBoxFor(model => model.OrderDate, new { @class = "kendoDatePicker" })
                 </td>
                 <td>出貨日期</td>
                 <td>
-                    @Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })
+                    @Html.TextBoxFor(model => model.ShippedDate, new { @class = "kendoDatePicker" })
                 </td>
             </tr>
             <tr>
                 <td>需要日期</td>
                 <td colspan="3">
-                    @Html.TextBoxFor(model => model.RequireDdate, new { @type = "date" })
+                    @Html.TextBoxFor(model => model.RequireDdate, new { @class = "kendoDatePicker" })
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td colspan="3">
                     <input type="submit" value="查詢" />
-                    <input type="button" value="清除" />
+                    <input type="reset" value="清除" onclick="btnReset()"/>
                     @Html.ActionLink("新增訂單", "InsertOrder")
                 </td>
 
@@ -95,20 +97,71 @@
 }
 @section scripts{
     <script type="text/javascript">
-
-        $(".btnDelete").click(function (e) {
-            console.log("delete");
-            var tr = $(this).closest('tr')
-            $.ajax({
-                type: "POST",
-                url: "/Order/DeleteOrder",
-                data: "orderId="+$(this).next().val(),
-                dataType: "json",
-                success: function (response) {
-                    $(tr).remove();
-                }
+        function btnReset() {
+            $("input").val() = "";
+        }
+        $(document).ready(function () {
+            $(".btnDelete").click(function (e) {
+                console.log("delete");
+                var tr = $(this).closest('tr')
+                $.ajax({
+                    type: "POST",
+                    url: "/Order/DeleteOrder",
+                    data: "orderId=" + $(this).next().val(),
+                    dataType: "json",
+                    success: function (response) {
+                        $(tr).remove();
+                    }
+                });
+                return false;
             });
-            return false;
+
+            $(".kendoDatePicker").kendoDatePicker({
+                // defines the start view
+                start: "day",
+                // defines when the calendar should return date
+                depth: "year",
+                // display month and year in the input
+                format: "yyyy/MM/dd"
+            });
+
+
+            function aaa() {
+                var kendoComboBoxName = [];
+                for (var i = 0; i < $(".kendoComboBox").length; i++) {
+                    kendoComboBoxName[i] = '#' + $(".kendoComboBox")[i].name;
+                }
+                var dataSrcCode;
+                for (var i = 0; i < kendoComboBoxName.length; i++) {
+                    dataSrcCode = new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                //以下其實就是$.ajax的參數
+                                type: "POST",
+                                url: "/Order/code",
+                                dataType: "json",
+                                data: {
+                                    //額外傳至後方的參數
+                                    keywd: function () {
+                                        return kendoComboBoxName[i];
+                                    }
+
+                                }
+                            }
+                        }
+                    });
+                    $(kendoComboBoxName[i]).kendoComboBox({
+                        placeholder:"請選擇", 
+                        dataTextField: "Text",
+                        dataValueField: "Value",
+                        dataSource: dataSrcCode
+                        //filter: "contains",
+                        //suggest: true,
+                    });
+                }
+            }
+            aaa();
+
         });
 
     </script>

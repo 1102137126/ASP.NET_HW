@@ -35,7 +35,6 @@ namespace WebApplication2.Models
                             )VALUES(
 							    @OrderId, @ProductID, @UnitPrice, @Qty, @Discount
 						    )";
-                int result;
                 using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
                 {
                     conn.Open();
@@ -46,7 +45,7 @@ namespace WebApplication2.Models
                     cmd.Parameters.Add(new SqlParameter("@Qty", row.Qty));
                     cmd.Parameters.Add(new SqlParameter("@Discount", row.Discount));
 
-                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                    cmd.ExecuteNonQuery();
                     conn.Close();
                 }
             }
@@ -59,7 +58,8 @@ namespace WebApplication2.Models
             string sql = @"SELECT OrderID, OD.ProductID, OD.UnitPrice, Qty, Discount, ProductName
                         FROM Sales.OrderDetails AS OD
                         INNER JOIN Production.Products AS P ON OD.ProductID = P.ProductID
-                        WHERE OrderID=@OrderId";
+                        WHERE OrderID=@OrderId
+                        ORDER BY ProductName";
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
             {
                 conn.Open();
