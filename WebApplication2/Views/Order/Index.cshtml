@@ -55,9 +55,11 @@
             <tr>
                 <td></td>
                 <td colspan="3">
-                    <input type="submit" value="查詢" />
-                    <input type="reset" value="清除" onclick="btnReset()"/>
-                    @Html.ActionLink("新增訂單", "InsertOrder")
+                    @*<input type="submit" value="查詢" />*@
+                    <span id="submit">查詢</span>
+                    <span id="reset">清除</span>
+                    @*<input type="reset" value="清除" />*@
+                    @Html.ActionLink("新增訂單", "InsertOrder", null, new { @id = "insert" })
                 </td>
 
             </tr>
@@ -97,10 +99,86 @@
 }
 @section scripts{
     <script type="text/javascript">
-        function btnReset() {
-            $("input").val() = "";
-        }
+
         $(document).ready(function () {
+
+            //查詢條件
+            $("span#submit").kendoButton({
+                spriteCssClass: "k-icon k-i-search",
+                click: function (e) {
+                    var value = [];
+                    var id = [];
+                    for (var i = 0; i < $("input[type='text']").length; i++) {
+                        value[i] = $("input[type='text']")[i].value;
+                        id[i] = $("input[type='text']")[i].id;
+                    }
+                    $("#SearchResultSection").kendoGrid({
+                        dataSource: new kendo.data.DataSource({
+                            transport: {
+                                read: {
+                                    //以下其實就是$.ajax的參數
+                                    type: "POST",
+                                    url: "/Order/SearchResultSection",
+                                    dataType: "json",
+                                    data: {
+                                        //額外傳至後方的參數
+                                        id: id ,
+                                        value: value
+                                    }
+                                }
+                            }
+                        }),
+                        height: 550,
+                        groupable: true,
+                        sortable: true,
+                        pageable: {
+                            refresh: true,
+                            pageSizes: true,
+                            buttonCount: 5
+                        },
+                        columns: [{
+                            //template: "<div class='customer-photo'" +
+                            //                "style='background-image: url(../content/web/Customers/#:data.CustomerID#.jpg);'></div>" +
+                            //            "<div class='customer-name'>#: ContactName #</div>",
+                            title: "訂單編號",
+                            field: "OrderId",
+                        }, {
+                            title: "客戶名稱",
+                            field: "CustName"
+                        }, {
+                            title: "訂購日期",
+                            field: "OrderDate"
+                        }, {
+                            title: "發貨日期",
+                            field: "ShippedDate"
+                        }, {
+                            title: "",
+                            field: "修改"
+                        }, {
+                            title: "",
+                            field: "d"
+                        }]
+                    });
+                }
+            });
+
+            //新增訂單
+            $("a#insert").kendoButton({
+                spriteCssClass: "k-icon k-i-plus",
+            });
+
+            //清除查詢條件
+            $("span#reset").kendoButton({
+                spriteCssClass: "k-icon k-i-close",
+                click: function (e) {
+                    for (var i = 0; i < $("input[type='text']").length; i++) {
+                        $("input[type='text']")[i].value = "";
+                    }
+                    $("input[type='text']").removeAttr("value");
+                }
+            });
+
+            //刪除訂單
             $(".btnDelete").click(function (e) {
                 console.log("delete");
                 var tr = $(this).closest('tr')
@@ -116,6 +194,7 @@
                 return false;
             });
 
+            //設定 kendo 日期 
             $(".kendoDatePicker").kendoDatePicker({
                 // defines the start view
                 start: "day",
@@ -125,43 +204,38 @@
                 format: "yyyy/MM/dd"
             });
 
-
-            function aaa() {
-                var kendoComboBoxName = [];
-                for (var i = 0; i < $(".kendoComboBox").length; i++) {
-                    kendoComboBoxName[i] = '#' + $(".kendoComboBox")[i].name;
-                }
-                var dataSrcCode;
-                for (var i = 0; i < kendoComboBoxName.length; i++) {
-                    dataSrcCode = new kendo.data.DataSource({
-                        transport: {
-                            read: {
-                                //以下其實就是$.ajax的參數
-                                type: "POST",
-                                url: "/Order/code",
-                                dataType: "json",
-                                data: {
-                                    //額外傳至後方的參數
-                                    keywd: function () {
-                                        return kendoComboBoxName[i];
-                                    }
-
+            //設置 kendo 的 select
+            var kendoComboBoxName = [];
+            for (var i = 0; i < $(".kendoComboBox").length; i++) {
+                kendoComboBoxName[i] = '#' + $(".kendoComboBox")[i].name;
+            }
+            var dataSrcCode;
+            for (var i = 0; i < kendoComboBoxName.length; i++) {
+                dataSrcCode = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            //以下其實就是$.ajax的參數
+                            type: "POST",
+                            url: "/Order/code",
+                            dataType: "json",
+                            data: {
+                                //額外傳至後方的參數
+                                keywd: function () {
+                                    return kendoComboBoxName[i];
                                 }
                             }
                         }
-                    });
-                    $(kendoComboBoxName[i]).kendoComboBox({
-                        placeholder:"請選擇", 
-                        dataTextField: "Text",
-                        dataValueField: "Value",
-                        dataSource: dataSrcCode
-                        //filter: "contains",
-                        //suggest: true,
-                    });
-                }
+                    }
+                });
+                $(kendoComboBoxName[i]).kendoComboBox({
+                    placeholder:"請選擇", 
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    dataSource: dataSrcCode
+                    //filter: "contains",
+                    //suggest: true,
+                });
             }
-            aaa();
-
         });
 
     </script>

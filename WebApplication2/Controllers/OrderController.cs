@@ -152,6 +152,14 @@ namespace WebApplication2.Controllers
             return PartialView("_SysDatePartial");
         }*/
 
+        public JsonResult SearchResultSection(KendoGridRequest request, string id, string value)
+        {
+            string a = id.Split(",");
+            //var result = this.orderService.GetOrderByCondtioin(keywd); ;
+            return null;
+            //return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult code(KendoGridRequest request, string keywd)
         {
             var result = this.codeService.GetProduct();
