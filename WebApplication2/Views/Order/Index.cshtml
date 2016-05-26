@@ -122,8 +122,13 @@
                                     dataType: "json",
                                     data: {
                                         //額外傳至後方的參數
-                                        id: id ,
-                                        value: value
+                                        CustName: $("#CustName").val(),
+                                        OrderDate: $("#OrderDate").val(),
+                                        EmpId: $("#EmpId").val(),
+                                        RequireDdate: $("#RequireDdate").val(),
+                                        OrderId: $("#OrderId").val(),
+                                        ShipperId: $("#ShipperId").val(),
+                                        ShippedDate: $("#ShippedDate").val()
                                     }
                                 }
                             }
@@ -171,10 +176,11 @@
             $("span#reset").kendoButton({
                 spriteCssClass: "k-icon k-i-close",
                 click: function (e) {
-                    for (var i = 0; i < $("input[type='text']").length; i++) {
-                        $("input[type='text']")[i].value = "";
-                    }
-                    $("input[type='text']").removeAttr("value");
+                    var kendoDatePicker = $(".kendoDatePicker").data("kendoDatePicker").val() = "";
+                    //for (var i = 0; i < $("input[type='text']").length; i++) {
+                    //    $("input[type='text']")[i].value = "";
+                    //}
+                    //$("input[type='text']").removeAttr("value");
                 }
             });
 
