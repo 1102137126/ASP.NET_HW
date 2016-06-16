@@ -55,7 +55,7 @@
             <tr>
                 <td></td>
                 <td colspan="3">
-                    @*<input type="submit" value="查詢" />*@
+                    <input type="submit" value="查詢" />
                     <span id="submit">查詢</span>
                     <span id="reset">清除</span>
                     @*<input type="reset" value="清除" />*@
@@ -157,11 +157,14 @@
                             title: "發貨日期",
                             field: "ShippedDate"
                         }, {
-                            title: "",
-                            field: "修改"
+                            title: "修改",
+                            field: "修改",
+                            template: "<a href=Update/#: OrderId #>修改</a>"
+                            //<button onclick='javascript:location.href=Update/#: OrderId #'>修改</button>
                         }, {
-                            title: "",
-                            field: "d"
+                            title: "刪除",
+                            field: "刪除",
+                            //template: "<a class='hidOrderId' href='#12#'>刪除</a><input class='hidOrderId' type='hidden' value=#: OrderId # />"
                         }]
                     });
                 }

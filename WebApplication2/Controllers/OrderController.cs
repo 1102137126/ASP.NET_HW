@@ -155,9 +155,10 @@ namespace WebApplication2.Controllers
         public JsonResult SearchResultSection(KendoGridRequest request, Models.OrderSearchArg arg)
         {
             //string a = Split(id, ",");
-            //var result = this.orderService.GetOrderByCondtioin(keywd); ;
-            return null;
-            //return Json(result, JsonRequestBehavior.AllowGet);
+            //var result = this.orderService.GetOrderByCondtioin(keywd); 
+            var result = this.orderService.GetOrderByCondtioin(arg);
+            //return null;
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult code(KendoGridRequest request, string keywd)
